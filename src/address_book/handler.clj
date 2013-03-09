@@ -104,6 +104,7 @@
 ;;autheticate
 (def security-policy
   [#".*\.(css|js|png|jpg|gif|ico)$" :any
+   #"/bootstrap.*" :any
    #"/login.*" :any
    #"/logout.*" :any
    #"/permission-denied.*" :any
