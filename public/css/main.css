@@ -1,0 +1,12 @@
+.containerMainIn {
+    margin: 0 auto;
+    width: 950px;
+	height: 650px;
+	background-color: #FFFAF0;
+}
+/* LIST #2 */
+#list2 { width:320px; margin-top:10px; background-color:#DCDCDC; margin-left: 25px;}
+#list2 { font-style:italic; font-family:Georgia, Times, serif; font-size:24px; color:#bfe1f1;  }
+#list2 li {margin-top:5px; }
+#list2 li p { padding:8px; font-style:normal; font-family:Arial; font-size:13px; color:#0000FF; border-left: 1px solid #999; background-color:#FFB6C1;}
+#list2 li p em { display:block; }
