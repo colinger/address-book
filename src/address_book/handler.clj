@@ -36,7 +36,7 @@
   (enlive/at html [#{:html :body}] enlive/unwrap))
 ;;layout
 (enlive/deftemplate layout "layout.html" [title content]
-                    [#{:title :h1}] (enlive/content title)
+                    [#{:title}] (enlive/content title)
                     [:div.content] (enlive/substitute (extract-body content)))
 ;;show all games
 (defn show-all-games [things]
