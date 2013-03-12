@@ -35,9 +35,13 @@
 (defn extract-body [html]
   (enlive/at html [#{:html :body}] enlive/unwrap))
 ;;layout
-(enlive/deftemplate layout "layout.html" [title content]
-                    [#{:title}] (enlive/content title)
-                    [:div.content] (enlive/substitute (extract-body content)))
+(enlive/deftemplate layout "layout.html" [title styles scripts content]
+  [#{:title}] (enlive/content title)
+  [:link.style] (enlive/clone-for [style styles]
+                                  (enlive/set-attr :href style))
+  [:script.import] (enlive/clone-for [script scripts]
+                                     (enlive/set-attr :src script))
+  [:div.content] (enlive/substitute (extract-body content)))
 ;;show all games
 (defn show-all-games [things]
   (enlive/at (enlive/html-resource "show.html")
@@ -116,13 +120,13 @@
 ;;(defn authenicate [request]
 ;;routes
 (defroutes app-routes
-  (GET "/" [] (layout "游戏必杀技 | 玩家 | 切磋" (show-all-games (things))))         
+  (GET "/" [] (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games (things))))         
   ;;(GET "/show" [] (layout "游戏必杀技 | 玩家 | 交流" (show-all-games (things))))
   (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
                                      (redirect-to "/admin")))
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") (show-a-game game))))
+         (layout (str (:name game) " | " "游戏必杀技") nil nil (show-a-game game))))
   (GET "/admin" [] (layout "后台管理" (admin-list-games (things))))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))
@@ -130,7 +134,7 @@
          (render (add-game-page))))
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") (edit-a-game game))))
+         (layout (str (:name game) " | " "游戏必杀技") nil nil (edit-a-game game))))
   (POST "/admin/game/tag/" {params :params}
         ;;save tags
         (model/save-tag-for-game params)
