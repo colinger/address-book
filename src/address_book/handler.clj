@@ -131,6 +131,10 @@
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
          (layout (str (:name game) " | " "游戏必杀技") (edit-a-game game))))
+  (POST "/admin/game/tag/" {params :params}
+        ;;save tags
+        (model/save-tag-for-game params)
+        )
   (mp/wrap-multipart-params 
       (POST "/uploader" {params :params} (do (println params)(upload-file (:upload params) (:CKEditorFuncNum params)))))
   (form-authentication-routes (fn [_ c] (html c)) (auth/form-authentication-adapter))  

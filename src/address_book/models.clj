@@ -37,6 +37,10 @@
   (let [tag-id (produce-tag-id tag-name)] 
     (insert games2tags (values {:games_id game-id
                                 :tags_id tag-id}))))
+(defn save-tag-for-game [params]
+  (let [game-id (:id params)
+        tag-name (:tag params)])
+  (println (str game-id " -> " tag-name)))
 ;;-----------------------------
 ;;games
 ;;-----------------------------
