@@ -28,6 +28,15 @@
   (first (select tags (where {:name name}))))
 (defn get-tag-id-by-name [name]
   (:id (get-tag-by-name name)))
+(defn produce-tag-id [tag-name]
+  (let [tag-id (get-tag-id-by-name tag-name)]
+    (if (nil? tag-id)
+      (:GENERATED_KEY (create-tag tag-name))
+	  tag-id)))
+(defn set-tag-for-game[game-id tag-name]
+  (let [tag-id (produce-tag-id tag-name)] 
+    (insert games2tags (values {:games_id game-id
+                                :tags_id tag-id}))))
 ;;-----------------------------
 ;;games
 ;;-----------------------------
@@ -35,7 +44,7 @@
 (declare update-game)
 (defn save-or-update-game [attrs]
   (let [id (get attrs :id)]
-    (if (empty? id)
+    (if (nil? id)
       (create-game attrs)
       (update-game attrs))))
 (defn create-game [attrs]
