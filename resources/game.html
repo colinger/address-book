@@ -1,6 +1,57 @@
+<style style="text/css">
+  .tag {
+    background-color: #FFFFFF;
+    background-position: -146px 2px;
+    border: 1px solid #EEEEEE;
+    color: #666666;
+    display: inline-block;
+    font-size: 13px;
+    height: 20px;
+    line-height: 21px;
+    margin-bottom: 3px;
+    max-width: 100px;
+    overflow: hidden;
+    padding: 2px 5px 2px 20px;
+    position: relative;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tag .taglogo {
+    background-position: -161px 1px;
+    float: left;
+    height: 20px;
+    margin: 0 5px 0 -15px;
+    width: 14px;
+}
+
+.tag:hover{
+    background-color: #D3D3D3;
+    color: #666666;
+}
+i {
+    background-image: url("/imgs/tag.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+</style>
 <div class="post">
-    <div class="page-header">
-        <h1><span class="title">Title of the Game</span></h1>
-    </div>
-    <div class="content">Game Content</div>
+  <div class="page-header">
+    <h1><span class="title">Title of the Game</span></h1>
+    <div class="link-info">  
+      <span class="link-tags"> 
+	<div class="input-container clearfix"> 
+	  <ul class="tags">  
+	    <li style="list-style:none;">
+	      <a data-tag="github" class="tag" href="/tags/github" style="text-decoration: none;">
+		  <i class="taglogo"></i>
+		  <span>github</span>
+	      </a>
+	    </li>
+	  </ul> 
+	</div>  
+      </span> 
+    </div> 
+  </div>
+  <div class="content">Game Content</div>
 </div>
