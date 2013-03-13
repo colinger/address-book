@@ -117,24 +117,27 @@
    #"/uploader.*" :any
    #"/admin.*" :user
    #"/" #{:any}])
-;;(defn authenicate [request]
+;;css
+(def game-css ["/css/game.css"])
+(def game-admin-css ["/css/game.css" "/css/admin/game.css"])
+;;js
+(def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js"])  
 ;;routes
 (defroutes app-routes
-  (GET "/" [] (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games (things))))         
-  ;;(GET "/show" [] (layout "游戏必杀技 | 玩家 | 交流" (show-all-games (things))))
+  (GET "/" [] (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games (things))))   
   (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
                                      (redirect-to "/admin")))
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") nil nil (show-a-game game))))
-  (GET "/admin" [] (layout "后台管理" (admin-list-games (things))))
+         (layout (str (:name game) " | " "游戏必杀技") game-css nil (show-a-game game))))
+  (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (things))))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))
-         (layout "后台管理-登录" login-home)
+         (layout "后台管理-登录" nil nil login-home)
          (render (add-game-page))))
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") nil nil (edit-a-game game))))
+         (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game))))
   (POST "/admin/game/tag/" {params :params}
         ;;save tags
         (model/save-tag-for-game params)
