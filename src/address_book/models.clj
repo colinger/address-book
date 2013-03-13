@@ -39,8 +39,8 @@
                                 :tags_id tag-id}))))
 (defn save-tag-for-game [params]
   (let [game-id (:id params)
-        tag-name (:tag params)])
-  (println (str game-id " -> " tag-name)))
+        tag-name (:tag params)]
+  (println (str game-id " -> " tag-name))))
 ;;-----------------------------
 ;;games
 ;;-----------------------------

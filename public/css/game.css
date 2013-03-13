@@ -1,0 +1,35 @@
+  .tag {
+    background-color: #FFFFFF;
+    background-position: -146px 2px;
+    border: 1px solid #EEEEEE;
+    color: #666666;
+    display: inline-block;
+    font-size: 13px;
+    height: 20px;
+    line-height: 21px;
+    margin-bottom: 3px;
+    max-width: 100px;
+    overflow: hidden;
+    padding: 2px 5px 2px 20px;
+    position: relative;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tag .taglogo {
+    background-position: -161px 1px;
+    float: left;
+    height: 20px;
+    margin: 0 5px 0 -15px;
+    width: 14px;
+}
+
+.tag:hover{
+    background-color: #D3D3D3;
+    color: #666666;
+}
+i {
+    background-image: url("/imgs/tag.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+}
