@@ -53,7 +53,10 @@
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
              [:span.title] (enlive/content (:name game))
-             [:div.content] (enlive/html-content (:description game)))) 
+             [:div.content] (enlive/html-content (:description game))
+			 [:ul.tags] (enlive/clone-for [tag (:tags game)]
+				[:a.tag] (enlive/set-attr :href (str "/tags/" (:name tag)))
+				[:span] (enlive/content (:name tag))))) 
 ;;
 (defn admin-list-games [things]
   (enlive/at (enlive/html-resource "admin/edit.html")
@@ -66,12 +69,15 @@
   (enlive/at (enlive/html-resource "admin/deploy.html")
              [:input#id] (enlive/set-attr :value (:id game))
              [:div#titlewrap :input] (enlive/set-attr :value (:name game))
-             [:div#postdivrich :textarea] (enlive/html-content (:description game))))                                     
+             [:div#postdivrich :textarea] (enlive/html-content (:description game))
+			 [:ul.tags] (enlive/clone-for [tag (:tags game)]
+				[:a.tag] (enlive/set-attr :href (str "/tags/" (:name tag)))
+				[:span] (enlive/content (:name tag)))))
 ;;
-;;(defn json-response [data & [status]]
-;;    {:status (or status 200)a
-;;        :headers {"Content-Type" "application/json;charset=UTF-8"}
-;;        :body (json/generate-string data)})
+(defn json-response [data & [status]]
+    {:status (or status 200)
+        :headers {"Content-Type" "application/json;charset=UTF-8"}
+        :body (json/generate-string data)})
 (defn render [location]
   (apply str location))
 ;;upload file
@@ -92,7 +98,7 @@
   [id]
   (let [gameId (Integer/parseInt id)]
  ;;     (->> 
-        (first (select model/games (where {:id gameId})))
+        (first (select model/games (where {:id gameId}) (with model/tags)))
  ;;       show-a-game
  ;;       )
     )
@@ -121,7 +127,7 @@
 (def game-css ["/css/game.css"])
 (def game-admin-css ["/css/game.css" "/css/admin/game.css"])
 ;;js
-(def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js"])  
+(def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js" "/js/jquery-1.4.2.min.js" "/js/admin/tag.js"])  
 ;;routes
 (defroutes app-routes
   (GET "/" [] (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games (things))))   
@@ -138,10 +144,11 @@
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
          (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game))))
-  (POST "/admin/game/tag/" {params :params}
+  (POST "/admin/game/tag" {params :params}
         ;;save tags
+		(json-response
         (model/save-tag-for-game params)
-        )
+        ))
   (mp/wrap-multipart-params 
       (POST "/uploader" {params :params} (do (println params)(upload-file (:upload params) (:CKEditorFuncNum params)))))
   (form-authentication-routes (fn [_ c] (html c)) (auth/form-authentication-adapter))  

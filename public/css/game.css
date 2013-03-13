@@ -1,13 +1,18 @@
-  .tag {
-    background-color: #FFFFFF;
+.page-header {
+		height: 75px;
+} 
+ .tag {
+    background-color: #E0EAF1;
     background-position: -146px 2px;
     border: 1px solid #EEEEEE;
     color: #666666;
     display: inline-block;
+    float: left;
     font-size: 13px;
     height: 20px;
     line-height: 21px;
     margin-bottom: 3px;
+    margin-right: 3px;
     max-width: 100px;
     overflow: hidden;
     padding: 2px 5px 2px 20px;
