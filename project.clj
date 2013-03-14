@@ -12,6 +12,7 @@
 ;;                 [sandbar/sandbar "0.4.0-SNAPSHOT"]
                  [korma "0.3.0-RC4"]
                  [enlive "1.1.1"]
+                 [clj-time "0.4.4"]
 ;;                 [ring/ring-jetty-adapter "0.2.5"]
 ;;                 [ring/ring-devel "0.2.5"]
                   ]

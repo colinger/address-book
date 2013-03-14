@@ -10,3 +10,6 @@
         (if (<= len length)
           res
           (str (.substring res 0 length)"......")))))
+;;
+(defn date-format [time]
+	(.format (java.text.SimpleDateFormat. "yyyy-MM-dd HH:mm") time))

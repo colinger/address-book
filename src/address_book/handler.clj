@@ -45,11 +45,13 @@
 ;;show all games
 (defn show-all-games [things]
   (enlive/at (enlive/html-resource "show.html")
-             [:div.post] (enlive/clone-for [thing things]
+             [:div.post] (enlive/clone-for [game things]
                                     [:a.title] (enlive/do->
-                                                 (enlive/set-attr :href (str "/game/" (:id thing)))
-                                                 (enlive/content (:name thing))) 
-                                    [:div.content](enlive/html-content (summary/summary-post (:description thing) 300)))))
+                                                 (enlive/set-attr :href (str "/game/" (:id game)))
+                                                 (enlive/content (:name game))) 
+									[:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))				
+                                    [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
+									[:a.more] (enlive/set-attr :href (str "/game/" (:id game))))))
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
              [:span.title] (enlive/content (:name game))
@@ -64,7 +66,7 @@
                               [:a.title] (enlive/do->
                                            (enlive/set-attr :href (str "/admin/game/edit/" (:id thing)))
                                            (enlive/content (:name thing)))
-                              [:div.content] (enlive/html-content (summary/summary-post (:description thing) 300)))))      
+                              [:div.content] (enlive/html-content (summary/summary-post (:description thing) 120)))))      
 (defn edit-a-game [game]
   (enlive/at (enlive/html-resource "admin/deploy.html")
              [:input#id] (enlive/set-attr :value (:id game))
@@ -117,6 +119,8 @@
    #"/bootstrap.*" :any
    #"/login.*" :any
    #"/logout.*" :any
+   #"/tags/.*" :any
+   #"/search.*" :any
    #"/permission-denied.*" :any
    #"/show.*" :any
    #"/game.*" :any
@@ -136,6 +140,13 @@
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
          (layout (str (:name game) " | " "游戏必杀技") game-css nil (show-a-game game))))
+  (GET "/tags/:name" [name]
+	   (let [games (model/game-has-tag name)]
+		  (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games games)))) 
+  (POST "/search" {params :params}
+       (let [name (:q params)]
+          (layout "搜索结果 | 游戏必杀技" nil nil (show-all-games (model/search-game name)))))        
+  ;;--------------------------admin
   (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (things))))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))

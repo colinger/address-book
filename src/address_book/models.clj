@@ -61,3 +61,11 @@
             (set-fields {:name (:name attrs)
                          :description (:description attrs)})
             (where {:id [= game-id]}))))
+(defn game-has-tag [name]
+	(->(select tags (where {:name name}) (with games))
+		first
+		:games
+	))
+;;search
+(defn search-game [name]
+  (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))))
