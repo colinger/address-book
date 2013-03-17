@@ -19,7 +19,7 @@
             (ring.middleware [multipart-params :as mp])
             (clojure.contrib [duck-streams :as ds])))
 ;;
-(defn things[] (select model/games))
+(defn things[] (model/all-games))
 
 (defn redirect-to
   "A shortcut for a '302 Moved' HTTP redirect."
