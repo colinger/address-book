@@ -55,6 +55,7 @@
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
              [:span.title] (enlive/content (:name game))
+             [:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))
              [:div.content] (enlive/html-content (:description game))
 			 [:ul.tags] (enlive/clone-for [tag (:tags game)]
 				[:a.tag] (enlive/set-attr :href (str "/tags/" (:name tag)))
@@ -135,18 +136,18 @@
 (def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js" "/js/jquery-1.4.2.min.js" "/js/admin/tag.js"])  
 ;;routes
 (defroutes app-routes
-  (GET "/" [] (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games (things))))   
+  (GET "/" [] (layout "九阴真经秘籍 | 玩家 | 切磋" nil nil (show-all-games (things))))   
   (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
                                      (redirect-to "/admin")))
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") game-css nil (show-a-game game))))
+         (layout (str (:name game) " | " "九阴秘籍") game-css nil (show-a-game game))))
   (GET "/tags/:name" [name]
 	   (let [games (model/game-has-tag name)]
-		  (layout "游戏必杀技 | 玩家 | 切磋" nil nil (show-all-games games)))) 
+		  (layout "九阴真经秘籍 | 玩家 | 切磋" nil nil (show-all-games games)))) 
   (POST "/search" {params :params}
        (let [name (:q params)]
-          (layout "搜索结果 | 游戏必杀技" nil nil (show-all-games (model/search-game name)))))        
+          (layout "搜索结果 | 九阴真经秘籍" nil nil (show-all-games (model/search-game name)))))        
   ;;--------------------------admin
   (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (things))))
   (GET "/admin/game" [] 
