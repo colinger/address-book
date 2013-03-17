@@ -25,6 +25,11 @@
 ;;-----------------------------
 (defn all-games []
   (select games (order :create_date :DESC)))
+(defn all-games-pagination [current-page]
+  (select games 
+          (limit 10) 
+          (offset (- current-page 1)) 
+          (order :create_date :DESC)))
 (defn create-tag [name]
   (insert tags (values {:name name})))
 (defn get-tag-by-name [name]
