@@ -66,6 +66,7 @@
                               [:a.title] (enlive/do->
                                            (enlive/set-attr :href (str "/admin/game/edit/" (:id thing)))
                                            (enlive/content (:name thing)))
+                              [:a.del] (enlive/set-attr :href (str "/admin/game/del/" (:id thing)))
                               [:div.content] (enlive/html-content (summary/summary-post (:description thing) 120)))))      
 (defn edit-a-game [game]
   (enlive/at (enlive/html-resource "admin/deploy.html")
@@ -155,6 +156,9 @@
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
          (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game))))
+  (GET "/admin/game/del/:id" [id]
+       (do (model/game-delete id)
+         (layout "后台管理" nil nil (admin-list-games (things)))))
   (POST "/admin/game/tag" {params :params}
         ;;save tags
 		(json-response

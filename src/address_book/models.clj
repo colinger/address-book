@@ -1,6 +1,7 @@
 (ns address-book.models
   (:use address-book.config)
-  (:use korma.core))
+  (:use korma.core)
+  (:use korma.db))
 
 (declare games tags)
 ;;tags
@@ -66,6 +67,11 @@
 		first
 		:games
 	))
+;;delete game first delete the games2tags,then delete the game
+(defn game-delete [game-id]
+  (transaction
+    (delete games2tags (where {:games_id game-id}))
+    (delete games (where {:id game-id}))))
 ;;search
 (defn search-game [name]
   (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))))
