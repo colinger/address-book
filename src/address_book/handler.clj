@@ -191,7 +191,7 @@
          (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game))))
   (GET "/admin/game/del/:id" [id]
        (do (model/game-delete id)
-         (layout "后台管理" nil nil (admin-list-games (things)))))
+         (redirect-to "/admin")))
   (POST "/admin/game/tag" {params :params}
         ;;save tags
 		(json-response
