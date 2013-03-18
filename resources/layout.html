@@ -66,12 +66,42 @@
 		overflow: hidden;
 		padding-bottom: 0px;
 	}
+	.pagination {
+    	font-size: 13px;
+	}
+	.pagination p {
+    	line-height: 1;
+    	margin: 5px 0 0;
+	}
+	.pagination a {
+    	background: none repeat scroll 0 0 #407ACC;
+    	color: #FFFFFF;
+    	cursor: pointer;
+    	display: none;
+    	margin-left: 10px;
+    	padding: 5px 0;
+    	text-align: center;
+    	line-height: 15px;
+    	text-decoration: none;
+    	width: 80px;
+	}
+	.pagination a:hover {
+    	background: none repeat scroll 0 0 #084B91;
+	}
+	.pagination a.disabled {
+    	background: none repeat scroll 0 0 #DDDDDD;
+	}
+	.pagination .left {
+		float: left;
+	}
+	.pagination .right {
+    	float: right;
+	}
 	.game_footer{
 		border-top: 2px solid #CCCCCC;
 		color: #737573;
 		height: 38px;
 		line-height: 38px;
-		margin-top: 20px;
 		padding-bottom: 50px;
 		text-align: center;
 		margin-left: -20px;
@@ -96,7 +126,7 @@
 	  </ul>
 	</div>
 	<div class="search">
-	  <form action="/search" method="post" class="form-search" style="margin-top:20px;">
+	  <form action="/search" method="get" class="form-search" style="margin-top:20px;">
 	    <input type="text" name = "q" class="input-medium search-query" style="margin-top:3px;"/>
 	    <button type="submit" class="btn">搜索</button>
 	  </form>
