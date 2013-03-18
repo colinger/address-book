@@ -25,11 +25,17 @@
 ;;-----------------------------
 (defn all-games []
   (select games (order :create_date :DESC)))
+;;total games
+(defn count-games []
+  (select games (aggregate (count :*) :cnt)))
+;;with pagination
 (defn all-games-pagination [current-page]
-  (select games 
-          (limit 10) 
-          (offset (- current-page 1)) 
-          (order :create_date :DESC)))
+  (let [record-info (first (count-games))]
+    (cons record-info (select games 
+                               (limit 10) 
+                               (offset (- current-page 1)) 
+                               (order :create_date :DESC)))))
+;;tag operations
 (defn create-tag [name]
   (insert tags (values {:name name})))
 (defn get-tag-by-name [name]

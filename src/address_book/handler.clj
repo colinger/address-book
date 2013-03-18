@@ -43,7 +43,9 @@
                                      (enlive/set-attr :src script))
   [:div.content] (enlive/substitute (extract-body content)))
 ;;show all games
-(defn show-all-games [things]
+(defn show-all-games [params]
+  (let [cur-page (get params :page 1)
+       [things (model/all-games-pagination cur-page)]
   (enlive/at (enlive/html-resource "show.html")
              [:div.post] (enlive/clone-for [game things]
                                     [:a.title] (enlive/do->
@@ -51,7 +53,7 @@
                                                  (enlive/content (:name game))) 
 									[:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))				
                                     [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
-									[:a.more] (enlive/set-attr :href (str "/game/" (:id game))))))
+									[:a.more] (enlive/set-attr :href (str "/game/" (:id game)))))))
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
              [:span.title] (enlive/content (:name game))
