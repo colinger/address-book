@@ -168,18 +168,18 @@
 (def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js" "/js/jquery-1.4.2.min.js" "/js/admin/tag.js"])  
 ;;routes
 (defroutes app-routes
-  (GET "/" {params :params} (layout "九阴真经秘籍 | 玩家 | 切磋" nil nil (show-all-games params)))   
+  (GET "/" {params :params} (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (show-all-games params)))   
   (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
                                      (redirect-to "/admin")))
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "九阴秘籍") game-css nil (show-a-game game))))
+         (layout (str (:name game) " | " "步步为赢") game-css nil (show-a-game game))))
   (GET "/tags/:name" [name]
 	   (let [games (model/game-has-tag name)]
-		  (layout "九阴真经秘籍 | 玩家 | 切磋" nil nil (show-all-games games)))) 
+		  (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (show-all-games games)))) 
   (GET "/search" {params :params}
        (let [name (:q params)]
-          (layout "搜索结果 | 九阴真经秘籍" nil nil (search-all-games params))))        
+          (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (search-all-games params))))        
   ;;--------------------------admin
   (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (things))))
   (GET "/admin/game" [] 
