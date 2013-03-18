@@ -4,6 +4,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [compojure "1.1.5"]
+                 [ring "1.1.6"]
                  [ring-json-params "0.1.0"]
                  [clj-json "0.5.3"]
                  [mysql/mysql-connector-java "5.1.21"]
@@ -17,6 +18,6 @@
 ;;                 [ring/ring-devel "0.2.5"]
                   ]
   :plugins [[lein-ring "0.8.3"]]
-  :ring {:handler address-book.handler/app}
+  ;;:ring {:handler address-book.handler/app}
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]]}})

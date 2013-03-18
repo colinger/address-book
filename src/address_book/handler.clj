@@ -1,5 +1,6 @@
 (ns address-book.handler
   (:use [compojure.core]
+        [ring.adapter.jetty]
         [korma.core]
         [sandbar.auth]
         [sandbar.form-authentication]
@@ -173,13 +174,12 @@
   (route/files "/" {:root "public"})        
   (route/not-found "Page Not Found"))
 
-(def webapp (-> app-routes
-           (with-security security-policy form-authentication)              
-           wrap-stateful-session
-           mdw/wrap-request-logging))
+(def webapp (-> app-routes 
+              (with-security security-policy form-authentication)              
+              wrap-stateful-session
+              mdw/wrap-request-logging
+              handler/site
+              ))
 
-;;(defn start-app []
-;;  (future (run-jetty (var app) {:port 3000})))
-
-(def app
-  (handler/site webapp))
+(defn start-app 
+  [port] (future (run-jetty (var webapp) {:port port :join? false})))
