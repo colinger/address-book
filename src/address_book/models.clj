@@ -25,11 +25,26 @@
 ;;-----------------------------
 (defn all-games []
   (select games (order :create_date :DESC)))
+;;total games
+(defn count-games []
+  (select games (aggregate (count :*) :cnt)))
+;;with pagination
 (defn all-games-pagination [current-page]
-  (select games 
-          (limit 10) 
-          (offset (- current-page 1)) 
-          (order :create_date :DESC)))
+  (let [record-info (first (count-games))]
+    (cons record-info (select games 
+                               (limit 10) 
+                               (offset (* 10 (- current-page 1))) 
+                               (order :create_date :DESC)))))
+;;search
+(defn search-game [name]
+  (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]})) (order :create_date :DESC)))
+(defn search-games-pagination [name current-page]
+  (let [record-info (first (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]})) (aggregate (count :*) :cnt)))]
+	(cons record-info (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))
+								(limit 10) 
+								(offset (* 10 (- current-page 1))) 
+								(order :create_date :DESC)))))
+;;							   
 (defn create-tag [name]
   (insert tags (values {:name name})))
 (defn get-tag-by-name [name]
@@ -79,6 +94,4 @@
   (transaction
     (delete games2tags (where {:games_id game-id}))
     (delete games (where {:id game-id}))))
-;;search
-(defn search-game [name]
-  (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))))
+

@@ -7,3 +7,6 @@
     num))
 (defn random-number []
   (to-keyword (.getTime (Date.))))
+  
+(defn parse-int [s]
+   (Integer. (re-find  #"\d+" s )))  
