@@ -27,23 +27,28 @@
 (defn all-games []
   (select games (order :create_date :DESC)))
 ;;total games
-(defn- count-games [type]
-  (select games (where {:type type}) (aggregate (count :*) :cnt)))
+(defn- count-games 
+	([] (select games(aggregate (count :*) :cnt)))
+	([type] (select games (where {:type type}) (aggregate (count :*) :cnt))))
 ;;with pagination
-(defn- all-games-pagination [current-page type]
+(defn- games-pagination [current-page type]
   (let [record-info (first (count-games type))]
     (cons record-info (select games 
                                (where {:type type})
                                (limit 10) 
                                (offset (* 10 (- current-page 1))) 
                                (order :create_date :DESC)))))
-;;desk games
-(defn all-desk-games[]
-  (all-games DESK-GAME))
-(defn all-desk-games-pagination [current-page]
-  (all-games-pagination current-page DESK-GAME))
+;;board games
+(defn all-board-games-pagination [current-page]
+  (games-pagination current-page DESK-GAME))
 (defn all-mobile-games-pagination [current-page]
-  (all-games-pagination current-page CELLPHONE-GAME))
+  (games-pagination current-page CELLPHONE-GAME))
+(defn all-games-pagination [current-page]
+  (let [record-info (first (count-games))]
+    (cons record-info (select games 
+                               (limit 10) 
+                               (offset (* 10 (- current-page 1))) 
+                               (order :create_date :DESC)))))
 ;;search
 (defn search-game [name]
   (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]})) (order :create_date :DESC)))

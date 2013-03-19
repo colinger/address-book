@@ -52,15 +52,7 @@
 			 [:ul.tags] (enlive/clone-for [tag (:tags game)]
 				[:a.tag] (enlive/set-attr :href (str "/tags/" (:name tag)))
 				[:span] (enlive/content (:name tag))))) 
-;;
-(defn admin-list-games [things]
-  (enlive/at (enlive/html-resource "admin/edit.html")
-             [:div.post] (enlive/clone-for [thing things]
-                              [:a.title] (enlive/do->
-                                           (enlive/set-attr :href (str "/admin/game/edit/" (:id thing)))
-                                           (enlive/content (:name thing)))
-                              [:a.del] (enlive/set-attr :href (str "/admin/game/del/" (:id thing)))
-                              [:div.content] (enlive/html-content (summary/summary-post (:description thing) 120)))))      
+;;    
 (defn edit-a-game [game]
   (enlive/at (enlive/html-resource "admin/deploy.html")
              [:input#id] (enlive/set-attr :value (:id game))
@@ -115,6 +107,7 @@
    #"/logout.*" :any
    #"/tags/.*" :any
    #"/mobile/.*" :any
+   #"/board/.*" :any
    #"/search.*" :any
    #"/permission-denied.*" :any
    #"/show.*" :any
@@ -130,12 +123,11 @@
 ;;routes
 (def TITLE "步步为赢 | 游戏 | 玩家 | 切磋")
 (defroutes app-routes
-  (GET "/" {params :params} (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games params)))   
-  (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
-                                     (redirect-to "/admin")))
+  (GET "/" {params :params} (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games params)))  
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
          (layout (str (:name game) " | " "步步为赢") game-css nil (show-a-game game))))
+  (GET "/board/" {params :params} (layout TITLE nil nil (service/show-all-board-games params)))
   (GET "/mobile/" {params :params} (layout TITLE nil nil (service/show-all-mobile-games params)))
   (GET "/tags/:name" [name]
 	   (let [games (model/game-has-tag name)]
@@ -144,14 +136,16 @@
        (let [name (:q params)]
           (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (service/search-all-games params))))        
   ;;--------------------------admin
-  (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (model/all-games))))
+  (GET "/admin" {params :params} (layout "后台管理" nil nil (service/admin-show-all-games params)))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))
          (layout "后台管理-登录" nil nil login-home)
          (render (add-game-page))))
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game))))
+         (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game)))) 
+  (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
+                                     (redirect-to "/admin")))
   (GET "/admin/game/del/:id" [id]
        (do (model/game-delete id)
          (redirect-to "/admin")))
