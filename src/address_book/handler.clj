@@ -13,6 +13,7 @@
             [clj-json.core :as json]
             [address-book.address :as address]
             [address-book.models :as model]
+            [address-book.service :as service]
             [address-book.auth :as auth]
             [address-book.middleware :as mdw]
             [address-book.utils.string :as summary]
@@ -21,8 +22,6 @@
             (ring.middleware [multipart-params :as mp])
             (clojure.contrib [duck-streams :as ds])))
 ;;
-(defn things[] (model/all-games))
-
 (defn redirect-to
   "A shortcut for a '302 Moved' HTTP redirect."
   [location]
@@ -44,46 +43,7 @@
   [:script.import] (enlive/clone-for [script scripts]
                                      (enlive/set-attr :src script))
   [:div.content] (enlive/substitute (extract-body content)))
-;;show all games
-(defn show-all-games [params]
-  (let [cur-page (number/parse-int(get params :page "1"))
-        things (model/all-games-pagination cur-page)
-		games (rest things)
-		totals (:cnt (first things))
-		pages (int (+ 1 (quot totals 10.0)))]
-  (println "current page " cur-page " totals: " totals " pages " pages)		
-  (enlive/at (enlive/html-resource "show.html")
-             [:div.post] (enlive/clone-for [game games]
-                                    [:a.title] (enlive/do->
-                                                 (enlive/set-attr :href (str "/game/" (:id game)))
-                                                 (enlive/content (:name game))) 
-									[:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))				
-                                    [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
-									[:a.more] (enlive/set-attr :href (str "/game/" (:id game))))
-			 [:div.pagination] (cond (= pages cur-page) (enlive/html-content (str "<a style=\"display:block\" href=\"?page=" (- cur-page 1) "\" class=\"right prev\">上一页</a>"))
-									 (= 1 cur-page) (enlive/html-content (str "<a style=\"display:block\" href=\" ?page=" (+ 1 cur-page) "\" class=\"right next\">下一页</a>"))	
-									 (and (> cur-page 1) (< cur-page pages)) (enlive/html-content (str "<a style=\"display:block\" href=\" ?page=" (- cur-page 1) "\" class=\"right next\">下一页</a>" "<a style=\"display:block\" href=\"?page=" (+ 1 cur-page) "\" class=\"right prev\">上一页</a>"))
-			 ))))
-(defn search-all-games [params]
-  (let [cur-page (number/parse-int(get params :page "1"))
-        content (get params :q "")
-        things (model/search-games-pagination content cur-page)
-		games (rest things)
-		totals (:cnt (first things))
-		pages (int (+ 1 (quot totals 10.0)))]
-  (println "current page " cur-page " totals: " totals " pages " pages)		
-  (enlive/at (enlive/html-resource "show.html")
-             [:div.post] (enlive/clone-for [game games]
-                                    [:a.title] (enlive/do->
-                                                 (enlive/set-attr :href (str "/game/" (:id game)))
-                                                 (enlive/content (:name game))) 
-									[:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))				
-                                    [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
-									[:a.more] (enlive/set-attr :href (str "/game/" (:id game))))
-			 [:div.pagination] (cond (and (not= 1 pages) (= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\"?q=" content "&page=" (- cur-page 1) "\" class=\"right prev\">上一页</a>"))
-									 (and (= 1 cur-page) (not= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\"?q=" content "&page=" (+ 1 cur-page) "\" class=\"right next\">下一页</a>"))	
-									 (and (> cur-page 1) (< cur-page pages)) (enlive/html-content (str "<a style=\"display:block\" href=\"?q=" content "&page=" (- cur-page 1) "\" class=\"right next\">下一页</a>" "<a style=\"display:block\" href=\"?q=" content "&page=" (+ 1 cur-page) "\" class=\"right prev\">上一页</a>"))
-			 ))))			 
+;;show all games			 
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
              [:span.title] (enlive/content (:name game))
@@ -154,6 +114,7 @@
    #"/login.*" :any
    #"/logout.*" :any
    #"/tags/.*" :any
+   #"/mobile/.*" :any
    #"/search.*" :any
    #"/permission-denied.*" :any
    #"/show.*" :any
@@ -167,21 +128,23 @@
 ;;js
 (def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js" "/js/jquery-1.4.2.min.js" "/js/admin/tag.js"])  
 ;;routes
+(def TITLE "步步为赢 | 游戏 | 玩家 | 切磋")
 (defroutes app-routes
-  (GET "/" {params :params} (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (show-all-games params)))   
+  (GET "/" {params :params} (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games params)))   
   (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
                                      (redirect-to "/admin")))
   (GET "/game/:id" [id] 
        (let [game (game-details id)]
          (layout (str (:name game) " | " "步步为赢") game-css nil (show-a-game game))))
+  (GET "/mobile/" {params :params} (layout TITLE nil nil (service/show-all-mobile-games params)))
   (GET "/tags/:name" [name]
 	   (let [games (model/game-has-tag name)]
-		  (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (show-all-games games)))) 
+		  (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games games)))) 
   (GET "/search" {params :params}
        (let [name (:q params)]
-          (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (search-all-games params))))        
+          (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (service/search-all-games params))))        
   ;;--------------------------admin
-  (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (things))))
+  (GET "/admin" [] (layout "后台管理" nil nil (admin-list-games (model/all-games))))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))
          (layout "后台管理-登录" nil nil login-home)

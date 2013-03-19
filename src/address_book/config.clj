@@ -7,3 +7,7 @@
                :user "root"
                :password "colin123@go"
                :db "game_skill"}))
+
+;;TYPE
+(def CELLPHONE-GAME "手游") 
+(def DESK-GAME "桌游")
