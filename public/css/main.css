@@ -452,7 +452,6 @@ i {
     overflow-x: hidden;
     overflow-y: auto;
     padding: 15px;
-    position: fixed;
     width: 210px;
 }
 .content .pagination {
@@ -541,8 +540,6 @@ a:hover{
     background: url("../img/v2/write-hover.png") no-repeat scroll right center #F7FAFA;
 }
 .ref-content .link-ref-content .link-note {
-    background: none repeat scroll 0 0 #DDE0E4;
-    border-radius: 4px 4px 4px 4px;
     font-size: 13px;
     line-height: 1.5;
     margin: 0 0 10px;
