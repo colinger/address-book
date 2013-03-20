@@ -5,7 +5,7 @@
               {:port 3306
                :host "localhost"
                :user "root"
-               :password "colin123@go"
+               :password "admin"
                :db "game_skill"}))
 
 ;;TYPE

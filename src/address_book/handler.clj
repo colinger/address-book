@@ -42,13 +42,14 @@
                                   (enlive/set-attr :href style))
   [:script.import] (enlive/clone-for [script scripts]
                                      (enlive/set-attr :src script))
-  [:div.content] (enlive/substitute (extract-body content)))
+  [:div.content_detail] (enlive/substitute (extract-body content))
+  )
 ;;show all games			 
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
              [:span.title] (enlive/content (:name game))
              [:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))
-             [:div.content] (enlive/html-content (:description game))
+             [:div.description] (enlive/html-content (:description game))
 			 [:ul.tags] (enlive/clone-for [tag (:tags game)]
 				[:a.tag] (enlive/set-attr :href (str "/tags/" (:name tag)))
 				[:span] (enlive/content (:name tag))))) 
