@@ -145,7 +145,7 @@
        (let [name (:q params)]
           (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (service/search-all-games params))))        
   ;;--------------------------admin
-  (GET "/admin" {params :params} (layout "后台管理" nil nil (service/admin-show-all-games params)))
+  (GET "/admin" {params :params} (admin-layout "后台管理" nil nil (service/admin-show-all-games params)))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))
          (admin-layout "后台管理-登录" nil nil login-home)
