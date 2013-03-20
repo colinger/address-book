@@ -2,33 +2,158 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Title goes here</title>
-    <script type="text/javascript" src="/bootstrap/js/html5.js"></script>
+    <title>Title goes here</title><script type="text/javascript" src="/bootstrap/js/html5.js"></script>
     <link rel="stylesheet/less" type="text/css" href="/bootstrap/less/bootstrap.less"/>
-    <script src="/bootstrap/js/less-1.2.1.min.js" type="text/javascript"></script>
+    <script src="/bootstrap/js/less-1.3.3.min.js" type="text/javascript"></script>
     <style type="text/css">
-        body {
-            font-family: sans-serif;
-        }
-        .navbar-fixed-top .navbar-inner {
-            height: 45px;
-        }
-    </style>
+    body {
+        font-family: 微软雅黑,Verdana,sans-serif,宋体;
+    }
+    .navbar-fixed-top .navbar-inner {
+        height: 55px;
+    }   
+    .active a {
+        cursor:pointer;
+    }
+    .logo_title{
+        font-size:20px;
+    }
+    .games{
+        margin-left:200px;
+    }
+    .navbar .nav li a {
+        line-height: 11px;
+    }
+    .search{
+        position:absolute;
+        right:0;
+        top:0;
+    }   
+    .page-header {
+        padding-bottom: 0px;
+        border-bottom: 0px;
+        margin-bottom: 10px;
+    }
+    .page-header h1{
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .date{
+        color: #666666;
+    }
+    a {
+        text-decoration: none;
+        color: #3E62A6;
+        outline: 0 none;
+    }
+    a:hover{
+        color:#CC0000;
+        text-decoration:none;
+    }
+    .container{
+         width: 70%;
+    }
+    .content{
+        margin-top:30px;
+        color: #666666;
+        line-height: 20px;
+        margin: 10px 0;
+    }
+    .post {
+        border-bottom: 1px solid #EEEEEE;
+        margin-bottom: 0px;
+        overflow: hidden;
+        padding-bottom: 0px;
+    }
+    .pagination {
+        font-size: 13px;
+    }
+    .pagination p {
+        line-height: 1;
+        margin: 5px 0 0;
+    }
+    .pagination a {
+        background: none repeat scroll 0 0 #407ACC;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: none;
+        margin-left: 10px;
+        padding: 5px 0;
+        text-align: center;
+        line-height: 15px;
+        text-decoration: none;
+        width: 80px;
+    }
+    .pagination a:hover {
+        background: none repeat scroll 0 0 #084B91;
+    }
+    .pagination a.disabled {
+        background: none repeat scroll 0 0 #DDDDDD;
+    }
+    .pagination .left {
+        float: left;
+    }
+    .pagination .right {
+        float: right;
+    }
+    .game_footer{
+        border-top: 2px solid #CCCCCC;
+        color: #737573;
+        height: 38px;
+        line-height: 38px;
+        padding-bottom: 50px;
+        text-align: center;
+        margin-left: -20px;
+        margin-right: -20px;
+        
+    }
+</style>
+<link class="style" rel="stylesheet" type="text/css" media="screen"/>   
 </head>
 <body>
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <span><a class="brand"><b><a href="/">游戏-攻略-技巧 | 后台</a></b></a></span>
-            </div>
-        </div>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <span><a class="brand"><b><a href="/" class="logo_title">步步为赢 | 游戏-攻略-技巧</a></b></a></span>
+    <div class="games">
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a href="/" style="cursor:pointer;">首页|HOME</a>
+        </li>
+        <li class="active"><a href="/board/">PC游戏</a></li>
+        <li class="active"><a href="/mobile/">手机游戏</a></li>
+        <li class="active"><a href="http://tgy.7fgame.com/reg.html?spreadId=94932bb0383f4a1b84d2db6f20b7344a" style="cursor:pointer;">群雄逐鹿</a></li>
+        <li class="active"><a href="#" style="cursor:pointer;" onclick="alert('欢迎您的到来，希望能找到您想要的信息!');" >关于本站</a></li>
+      </ul>
     </div>
-    <div class="container">
-        <h1>Title goes here</h1>
+    <div class="search">
+      <form action="/search" method="get" class="form-search" style="margin-top:20px;">
+        <input type="text" name = "q" class="input-medium search-query" style="margin-top:3px;"/>
+        <button type="submit" class="btn">搜索</button>
+      </form>
+    </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <h1 style="margin-top:60px;"></h1>
 
-        <div class="content">
-            Content goes here.
-        </div>
+    <div class="content panel">
+      Content goes here.
     </div>
+    <div class="game_footer">
+    <table width="100%">
+        <tbody>
+            <tr>
+                <td align="left">&copy; 一起游戏，步步为赢 | <a href="#">关于我们</a> | <a href="mailto:colin_gxy@yahoo.com.cn">联系</a> | <a target="_blank" href="">QQ群:5864135</a> | 
+                    <script language="javascript" type="text/javascript" src="http://js.users.51.la/15616887.js"></script>
+                    <noscript><a href="http://www.51.la/?15616887" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/15616887.asp" style="border:none" /></a></noscript>                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+  </div>  
 </body>
+<script class="import" type="text/javascript"></script>
 </html>

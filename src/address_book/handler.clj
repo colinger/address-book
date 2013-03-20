@@ -44,6 +44,14 @@
                                      (enlive/set-attr :src script))
   [:div.content_detail] (enlive/substitute (extract-body content))
   )
+(enlive/deftemplate admin-layout "admin/layout.html" [title styles scripts content]
+  [#{:title}] (enlive/content title)
+  [:link.style] (enlive/clone-for [style styles]
+                                  (enlive/set-attr :href style))
+  [:script.import] (enlive/clone-for [script scripts]
+                                     (enlive/set-attr :src script))
+  [:div.content] (enlive/substitute (extract-body content))
+  )
 ;;show all games			 
 (defn show-a-game [game]
   (enlive/at (enlive/html-resource "game.html")
@@ -118,9 +126,9 @@
    #"/" #{:any}])
 ;;css
 (def game-css ["/css/game.css"])
-(def game-admin-css ["/css/game.css" "/css/admin/game.css"])
+(def game-admin-css ["/css/game.css" "/css/admin/game.css" "/bootstrap/less/bootstrap.less"])
 ;;js
-(def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js" "/js/jquery-1.4.2.min.js" "/js/admin/tag.js"])  
+(def game-admin-js ["/ckeditor/ckeditor.js" "/js/admin/ckeditor.js" "/js/jquery-1.4.2.min.js" "/js/admin/tag.js" "/bootstrap/js/less-1.3.3.min.js"])  
 ;;routes
 (def TITLE "步步为赢 | 游戏 | 玩家 | 切磋")
 (defroutes app-routes
@@ -140,11 +148,11 @@
   (GET "/admin" {params :params} (layout "后台管理" nil nil (service/admin-show-all-games params)))
   (GET "/admin/game" [] 
        (if (= "unkown" (session-get :current-user "unknow"))
-         (layout "后台管理-登录" nil nil login-home)
+         (admin-layout "后台管理-登录" nil nil login-home)
          (render (add-game-page))))
   (GET "/admin/game/edit/:id" [id]
        (let [game (game-details id)]
-         (layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game)))) 
+         (admin-layout (str (:name game) " | " "游戏必杀技") game-admin-css game-admin-js(edit-a-game game)))) 
   (POST "/admin/game" {params :params} (do (model/save-or-update-game params)
                                      (redirect-to "/admin")))
   (GET "/admin/game/del/:id" [id]
