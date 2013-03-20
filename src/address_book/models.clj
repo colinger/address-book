@@ -103,6 +103,14 @@
 		first
 		:games
 	))
+(defn search-games-have-tag-pagination [name current-page]
+  (let [record-info (first (:games (first (select  tags (where {:name name}) (with games (aggregate (count :*) :cnt))))))]
+  (cons record-info (:games (first (select tags (where {:name name}) 
+                      (with games
+                        (limit 10) 
+                        (offset (* 10 (- current-page 1))) 
+                        (order :create_date :DESC)
+                      )))))))
 ;;delete game first delete the games2tags,then delete the game
 (defn game-delete [game-id]
   (transaction

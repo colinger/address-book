@@ -138,9 +138,8 @@
          (layout (str (:name game) " | " "步步为赢") game-css nil (show-a-game game))))
   (GET "/board/" {params :params} (layout TITLE nil nil (service/show-all-board-games params)))
   (GET "/mobile/" {params :params} (layout TITLE nil nil (service/show-all-mobile-games params)))
-  (GET "/tags/:name" [name]
-	   (let [games (model/game-has-tag name)]
-		  (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games games)))) 
+  (GET "/tags/:name" {params :params}
+		  (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games-have-tags params)))
   (GET "/search" {params :params}
        (let [name (:q params)]
           (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (service/search-all-games params))))        
