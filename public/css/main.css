@@ -603,3 +603,13 @@ a:hover{
     margin-bottom: 10px;
     word-wrap: break-word;
 }
+.thumbnail_box {
+    border: 1px solid #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    display: inline;
+    float: left;
+    height: 100px;
+    margin: 4px 10px 8px 4px;
+    padding: 4px;
+    width: 140px;
+}
