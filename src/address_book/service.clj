@@ -11,6 +11,14 @@
             [net.cgrand.enlive-html :as enlive]
             (clojure.contrib [duck-streams :as ds])))
 ;;
+(defn produce-thumbnail [content]
+	(let [imgs (enlive/select (enlive/html-resource (java.io.StringReader. content)) [:img])
+	      srcs (map #(:src %) (map #(:attrs %) imgs))]
+	      (if (nil? (first srcs))
+	      	  "/images/default.png"
+	      	  (first srcs)
+	      )))
+;;
 (defn show-all-board-games [params]
   (let [cur-page (number/parse-int(get params :page "1"))
         things (model/all-board-games-pagination cur-page)
@@ -24,6 +32,7 @@
                                                        (enlive/set-attr :href (str "/game/" (:id game)))
                                                        (enlive/content (:name game)))
                                            [:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))
+                                    [:div.feature_img] (enlive/html-content (str "<a href=" "#" ">" "<img width=\"140\" height=\"100\" src="  (produce-thumbnail (:description game)) "></a>"))
                                            [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
                                            [:a.more] (enlive/set-attr :href (str "/game/" (:id game))))
              [:div.pagination] (cond (and (not= 1 pages) (= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\"?page=" (- cur-page 1) "\" class=\"right prev\">上一页</a>"))
@@ -43,20 +52,13 @@
                                                        (enlive/set-attr :href (str "/game/" (:id game)))
                                                        (enlive/content (:name game)))
                                            [:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))
+                                    [:div.feature_img] (enlive/html-content (str "<a href=" "#" ">" "<img width=\"140\" height=\"100\" src="  (produce-thumbnail (:description game)) "></a>"))
                                            [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
                                            [:a.more] (enlive/set-attr :href (str "/game/" (:id game))))
              [:div.pagination] (cond (and (not= 1 pages) (= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\"?page=" (- cur-page 1) "\" class=\"right prev\">上一页</a>"))
                                      (and (= 1 cur-page) (not= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\" ?page=" (+ 1 cur-page) "\" class=\"right next\">下一页</a>"))
                                      (and (> cur-page 1) (< cur-page pages)) (enlive/html-content (str "<a style=\"display:block\" href=\" ?page=" (- cur-page 1) "\" class=\"right next\">下一页</a>" "<a style=\"display:block\" href=\"?page=" (+ 1 cur-page) "\" class=\"right prev\">上一页</a>"))
                                      ))))
-;;
-(defn produce-thumbnail [content]
-	(let [imgs (enlive/select (enlive/html-resource (java.io.StringReader. content)) [:img])
-	      srcs (map #(:src %) (map #(:attrs %) imgs))]
-	      (if (nil? (first srcs))
-	      	  "/images/default.png"
-	      	  (first srcs)
-	      )))
 ;;
 (defn show-all-games [params]
   (let [cur-page (number/parse-int(get params :page "1"))
@@ -93,6 +95,7 @@
                                                  (enlive/set-attr :href (str "/game/" (:id game)))
                                                  (enlive/content (:name game)))
                                     [:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))
+                                    [:div.feature_img] (enlive/html-content (str "<a href=" "#" ">" "<img width=\"140\" height=\"100\" src="  (produce-thumbnail (:description game)) "></a>"))
                                     [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
                                     [:a.more] (enlive/set-attr :href (str "/game/" (:id game))))
              [:div.pagination] (cond (and (not= 1 pages) (= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\"?page=" (- cur-page 1) "\" class=\"right prev\">上一页</a>"))
@@ -114,6 +117,7 @@
                                                  (enlive/set-attr :href (str "/game/" (:id game)))
                                                  (enlive/content (:name game)))
                                     [:p.date] (enlive/html-content (str "<a href=\"#\">" "黄药师" "</a>" " 发布于 " (summary/date-format (:create_date game))))
+                                    [:div.feature_img] (enlive/html-content (str "<a href=" "#" ">" "<img width=\"140\" height=\"100\" src="  (produce-thumbnail (:description game)) "></a>"))
                                     [:p.detail](enlive/html-content (summary/summary-post (:description game) 120))
                                     [:a.more] (enlive/set-attr :href (str "/game/" (:id game))))
              [:div.pagination] (cond (and (not= 1 pages) (= pages cur-page)) (enlive/html-content (str "<a style=\"display:block\" href=\"?q=" content "&page=" (- cur-page 1) "\" class=\"right prev\">上一页</a>"))
