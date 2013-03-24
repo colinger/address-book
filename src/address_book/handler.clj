@@ -17,7 +17,7 @@
             [address-book.auth :as auth]
             [address-book.middleware :as mdw]
             [address-book.utils.string :as summary]
-	    [address-book.utils.number :as number]
+	        [address-book.utils.number :as number]
             [net.cgrand.enlive-html :as enlive]
             (ring.middleware [multipart-params :as mp])
             (clojure.contrib [duck-streams :as ds])))
@@ -29,7 +29,7 @@
    :headers {"Location" location}
    })
 ;;static html
-(def index (enlive/html-resource "index.html"))
+(enlive/deftemplate index  "index.html" [])
 (def login-home (enlive/html-resource "admin/login.html"))
 (enlive/deftemplate  add-game-page "admin/add.html" [])
 ;;
@@ -123,6 +123,7 @@
    #"/game.*" :any
    #"/uploader.*" :any
    #"/admin.*" :user
+   #"/api/.*" :any
    #"/" #{:any}])
 ;;css
 (def game-css ["/css/game.css"])
@@ -165,8 +166,14 @@
   (mp/wrap-multipart-params 
       (POST "/uploader" {params :params} (do (println params)(upload-file (:upload params) (:CKEditorFuncNum params)))))
   (form-authentication-routes (fn [_ c] (html c)) (auth/form-authentication-adapter))  
-   ;;---------------------------------------------------------
-  
+  ;;---------------------------------------------------------
+  ;;API
+  (GET "/api/game" [] (render (index)))
+  (POST "/api/game" {params :params}
+        (try
+          (model/save-or-update-game params)
+          (json-response {:status "success" :message "It will be presented after auditing"})
+          (catch Exception e (json-response {:status "failed" :message "Please try again later"}))))
   (route/files "/" {:root "public"})        
   (route/not-found "Page Not Found"))
 

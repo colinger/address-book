@@ -28,13 +28,13 @@
   (select games (order :create_date :DESC)))
 ;;total games
 (defn- count-games 
-	([] (select games(aggregate (count :*) :cnt)))
-	([type] (select games (where {:type type}) (aggregate (count :*) :cnt))))
+	([] (select games (where {:status 1}) (aggregate (count :*) :cnt)))
+	([type] (select games (where {:type type :status 1}) (aggregate (count :*) :cnt))))
 ;;with pagination
 (defn- games-pagination [current-page type]
   (let [record-info (first (count-games type))]
     (cons record-info (select games 
-                               (where {:type type})
+                               (where {:type type :status 1})
                                (limit 10) 
                                (offset (* 10 (- current-page 1))) 
                                (order :create_date :DESC)))))
@@ -43,18 +43,23 @@
   (games-pagination current-page DESK-GAME))
 (defn all-mobile-games-pagination [current-page]
   (games-pagination current-page CELLPHONE-GAME))
-(defn all-games-pagination [current-page]
-  (let [record-info (first (count-games))]
-    (cons record-info (select games 
+(defn all-games-pagination 
+  ([current-page]  (let [record-info (first (count-games))]
+    (cons record-info (select games (where {:status 1})
                                (limit 10) 
                                (offset (* 10 (- current-page 1))) 
                                (order :create_date :DESC)))))
+  ([status current-page] (let [record-info (first (select games (aggregate (count :*) :cnt)))]
+                           (cons record-info (select games
+                                                     (limit 10)
+                                                     (offset (* 10 (- current-page 1)))
+                                                     (order :create_date :DESC))))))
 ;;search
 (defn search-game [name]
-  (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]})) (order :create_date :DESC)))
+  (select games (where (and (= :status 1) (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))) (order :create_date :DESC)))
 (defn search-games-pagination [name current-page]
-  (let [record-info (first (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]})) (aggregate (count :*) :cnt)))]
-	(cons record-info (select games (where (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))
+  (let [record-info (first (select games (where (and (= :status 1) (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]}))) (aggregate (count :*) :cnt)))]
+	(cons record-info (select games (where (and (= :status 1) (or {:name [like (str "%" name "%")]} {:description [like (str "%" name "%")]})))
 								(limit 10) 
 								(offset (* 10 (- current-page 1))) 
 								(order :create_date :DESC)))))
@@ -96,6 +101,7 @@
   (let [game-id (:id attrs)]
     (update games 
             (set-fields {:name (:name attrs)
+                         :status (get attrs :status 0)
                          :description (:description attrs)})
             (where {:id [= game-id]}))))
 (defn game-has-tag [name]
@@ -104,9 +110,9 @@
 		:games
 	))
 (defn search-games-have-tag-pagination [name current-page]
-  (let [record-info (first (:games (first (select  tags (where {:name name}) (with games (aggregate (count :*) :cnt))))))]
+  (let [record-info (first (:games (first (select  tags (where {:name name}) (with games (where {:status 1}) (aggregate (count :*) :cnt))))))]
   (cons record-info (:games (first (select tags (where {:name name}) 
-                      (with games
+                      (with games (where {:status 1})
                         (limit 10) 
                         (offset (* 10 (- current-page 1))) 
                         (order :create_date :DESC)

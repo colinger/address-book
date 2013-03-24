@@ -128,7 +128,7 @@
 ;;-----------------------------------------------------------------------------------
 (defn admin-show-all-games [params]
   (let [cur-page (number/parse-int(get params :page "1"))
-        things (model/all-games-pagination cur-page)
+        things (model/all-games-pagination 11 cur-page);;11 means all games
 		games (rest things)
 		totals (:cnt (first things))
 		pages (int (+ 1 (quot totals 10.0)))]

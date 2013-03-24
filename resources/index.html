@@ -1,1 +1,61 @@
-<a href="/show">进去看看</a>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Add A POST</title>
+    <script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>
+    <script type="text/javascript">
+        //<![CDATA[
+        bkLib.onDomLoaded(function () {
+            new nicEditor({maxHeight: 300}).panelInstance('description');
+        });
+        function checkNull(){
+            var addform=document.form1;
+            if (addform.name.value==""){
+                alert("标题不能为空!");
+                addform.name.focus();   //用户名输入框获得焦点
+                return false;   //不提交表单
+            }
+            if(addform.description.value=="<br>"){
+                alert("内容不能为空!");
+                addform.description.focus();   //用户名输入框获得焦点
+                return false;   //不提交表单
+            }
+            return true;   //输入符合要求后执行表单提交操作
+        }
+        //]]>
+    </script>
+
+</head>
+<body>
+<div id="sample">
+<form action="http://www.bubuwy.com/api/game" method="post" onsubmit="$('#description').val($('.nicEdit-main').html());return checkNull();" name="form1">
+    <table>
+        <tr>
+            <td><p>标题:<input type="text" name="name" style="width:300px;" id="name"/></p></td>
+        </tr>
+        <tr>
+            <td>
+                <textarea style="height: 300px;" cols="100" id="description" name="description" >
+
+                </textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                游戏类型:<select name="type">
+                <option value="桌游">桌面游戏</option>
+                <option value="手游">手机游戏</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="保存"/></td>
+        </tr>
+    </table>
+</form>
+</div>
+</body>
+</html>

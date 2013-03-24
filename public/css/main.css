@@ -480,6 +480,7 @@ a:hover{
         margin-bottom: 0px;
         overflow: hidden;
         padding-bottom: 0px;
+        margin-bottom:15px;
 }
 .pagination {
     margin: 20px 0 0;
