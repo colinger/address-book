@@ -170,10 +170,14 @@
   ;;API
   (GET "/api/game" [] (render (index)))
   (POST "/api/game" {params :params}
-        (try
-          (model/save-or-update-game params)
-          (json-response {:status "success" :message "It will be presented after auditing"})
-          (catch Exception e (json-response {:status "failed" :message "Please try again later"}))))
+        (let [title (get params :name)
+              desc (get params :descritption)]
+          (if (or (nil? title) (nil? desc))
+            (json-response {:status "failed" :message "Please check you missed parameters"})
+            (try
+              (model/save-or-update-game params)
+              (json-response {:status "success" :message "It will be presented after auditing"})
+              (catch Exception e (json-response {:status "failed" :message "Please try again later"}))))))
   (route/files "/" {:root "public"})        
   (route/not-found "Page Not Found"))
 
