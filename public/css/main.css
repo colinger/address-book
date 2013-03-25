@@ -22,7 +22,6 @@ html {
     overflow-y: scroll;
 }
 body {
-    background: url("/static/img/bg.png?2013031915") repeat scroll 0 0 #EEEEEE;
     font-size: 15px;
     line-height: 1;
     margin: 0;

@@ -30,6 +30,7 @@
    })
 ;;static html
 (enlive/deftemplate index  "index.html" [])
+(enlive/deftemplate notFound  "404/404.html" [])
 (def login-home (enlive/html-resource "admin/login.html"))
 (enlive/deftemplate  add-game-page "admin/add.html" [])
 ;;
@@ -112,6 +113,8 @@
 (def security-policy
   [#".*\.(css|js|png|jpg|gif|ico)$" :any
    #"/bootstrap.*" :any
+   #"/bdsitemap.txt" :any
+   #"/robots.txt" :any
    #"/login.*" :any
    #"/logout.*" :any
    #"/tags/.*" :any
@@ -134,9 +137,11 @@
 (def TITLE "步步为赢 | 游戏 | 玩家 | 切磋")
 (defroutes app-routes
   (GET "/" {params :params} (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games params)))  
-  (GET "/game/:id" [id] 
-       (let [game (game-details id)]
-         (layout (str (:name game) " | " "步步为赢") game-css nil (show-a-game game))))
+  (GET "/game/:id" {params :params} 
+       (let [game (game-details (:id params))]
+		 (if (empty? game)
+			(render (notFound));;(redirect-to "/")
+			(layout (str (:name game) " | " "步步为赢") game-css nil (show-a-game game)))))
   (GET "/board/" {params :params} (layout TITLE nil nil (service/show-all-board-games params)))
   (GET "/mobile/" {params :params} (layout TITLE nil nil (service/show-all-mobile-games params)))
   (GET "/tags/:name" {params :params}
@@ -179,7 +184,7 @@
               (json-response {:status "success" :message "It will be presented after auditing"})
               (catch Exception e (json-response {:status "failed" :message "Please try again later"}))))))
   (route/files "/" {:root "public"})        
-  (route/not-found "Page Not Found"))
+  (route/not-found (render (notFound))))
 
 (def webapp (-> app-routes 
               (with-security security-policy form-authentication)              
