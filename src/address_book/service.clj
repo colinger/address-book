@@ -16,7 +16,7 @@
 	      srcs (map #(:src %) (map #(:attrs %) imgs))]
 	      (if (nil? (first srcs))
 	      	  "/images/default.png"
-	      	  (first srcs)
+	      	  (first srcs);;(clojure.string/replace "/images/default.png" #"images/" "images/thumbnail_")
 	      )))
 ;;
 (defn show-all-board-games [params]

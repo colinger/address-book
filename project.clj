@@ -8,6 +8,7 @@
                  [ring-json-params "0.1.0"]
                  [clj-json "0.5.3"]
                  [mysql/mysql-connector-java "5.1.21"]
+                 [net.coobird/thumbnailator "0.4.3"]
                  [hiccup "1.0.2"]
                  [isaacsu/sandbar "0.4.1"]
 ;;                 [sandbar/sandbar "0.4.0-SNAPSHOT"]

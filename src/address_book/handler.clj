@@ -18,6 +18,7 @@
             [address-book.middleware :as mdw]
             [address-book.utils.string :as summary]
 	        [address-book.utils.number :as number]
+            [address-book.utils.thumbnails :as thumbnails]
             [net.cgrand.enlive-html :as enlive]
             (ring.middleware [multipart-params :as mp])
             (clojure.contrib [duck-streams :as ds])))
@@ -88,7 +89,9 @@
   ;;(println file)
   ;;(println callback)
   (ds/copy (file :tempfile) (ds/file-str (str "public/images/" new-name)))
-    (upload-show (str "window.parent.CKEDITOR.tools.callFunction(" callback ",'" (str "/images/" new-name) "',''" ")"))
+    (do
+      (thumbnails/thumbnail new-name);;generate thumbnail
+      (upload-show (str "window.parent.CKEDITOR.tools.callFunction(" callback ",'" (str "/images/" new-name) "',''" ")")))
   ))
 ;;game details
 (defn game-details
@@ -145,10 +148,10 @@
   (GET "/board/" {params :params} (layout TITLE nil nil (service/show-all-board-games params)))
   (GET "/mobile/" {params :params} (layout TITLE nil nil (service/show-all-mobile-games params)))
   (GET "/tags/:name" {params :params}
-		  (layout "步步为赢 | 游戏 | 玩家 | 切磋" nil nil (service/show-all-games-have-tags params)))
+		  (layout (str (:name params) " | 步步为赢 | 游戏 | 玩家 | 切磋") nil nil (service/show-all-games-have-tags params)))
   (GET "/search" {params :params}
        (let [name (:q params)]
-          (layout "搜索结果 | 步步为赢 | 游戏 | 切磋" nil nil (service/search-all-games params))))        
+          (layout (str name " | 搜索结果 | 步步为赢 | 游戏 | 切磋") nil nil (service/search-all-games params))))        
   ;;--------------------------admin
   (GET "/admin" {params :params} (admin-layout "后台管理" nil nil (service/admin-show-all-games params)))
   (GET "/admin/game" [] 
